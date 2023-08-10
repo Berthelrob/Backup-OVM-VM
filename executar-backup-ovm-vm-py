@@ -1,0 +1,58 @@
+# -*- coding: utf-8 -*-
+
+import datetime
+import subprocess
+
+# Mapeamento de VMs para os dias da semana e condições correspondentes
+vm_schedule = {
+    "ESRVMWMANAGER": ("friday", 1),   # Primeira sexta-feira
+    "ESRVP12CSOA01": ("saturday", 1),  # Primeiro sábado
+    "ESRVP12CSOA02": ("sunday", 2),    # Segundo domingo
+    "ESRVPOHS01": ("sunday", 1),       # Primeiro domingo
+    "ESRVPOHS02": ("friday", 2),       # Segunda sexta-feira
+    "ESRVPOHS03": ("friday", 3),       # Terceira sexta-feira
+    "ESRVPOHS04": ("friday", 4),       # Quarta sexta-feira
+    "ESRVPSOA01": ("sunday", 3),       # Terceiro domingo
+    "ESRVPSOA02": ("sunday", 4),       # Quarto domingo
+    "ESRVPSOAMF01": ("saturday", 2),   # Segundo sábado
+    "ESRVPSOAMF02": ("saturday", 3)    # Terceiro sábado
+}
+
+# Função para calcular a data do próximo dia da semana especificado
+def next_weekday(d, weekday, count):
+    days_ahead = weekday - d.weekday()
+    if days_ahead <= 0:
+        days_ahead += 7
+    days_ahead += (count - 1) * 7
+    return d + datetime.timedelta(days_ahead)
+
+# Função para executar o comando de backup
+def execute_backup(vm):
+    command = "/opt/ovm-bkp/bin/ovm-backup.sh " + vm
+    subprocess.call(command, shell=True)
+
+# Função principal para agendar os backups
+def schedule_backups():
+    today = datetime.datetime.today()
+    
+    for vm, (weekday, count) in vm_schedule.items():
+        if weekday == "friday":
+            next_day = next_weekday(today, 4, count)
+        elif weekday == "saturday":
+            next_day = next_weekday(today, 5, count)
+        elif weekday == "sunday":
+            next_day = next_weekday(today, 6, count)
+        
+        next_day = next_day.replace(hour=0, minute=0, second=0, microsecond=0)
+        
+        if today == next_day:
+            execute_backup(vm)
+            print("Executando backup para", vm, "hoje.")
+        else:
+            days_until_backup = (next_day - today).days
+            print("Próximo backup para", vm, "em", days_until_backup, "dias.")
+            
+schedule_backups()
+
+## CRONTAB
+# 0 3 * * 5-7 /usr/bin/python /caminho/para/o/script.py
