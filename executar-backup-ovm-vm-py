@@ -33,7 +33,7 @@ def execute_backup(vm):
 
 # Função principal para agendar os backups
 def schedule_backups():
-    today = datetime.datetime.today()
+    today = datetime.date.today()
     
     for vm, (weekday, count) in vm_schedule.items():
         if weekday == "friday":
@@ -43,8 +43,6 @@ def schedule_backups():
         elif weekday == "sunday":
             next_day = next_weekday(today, 6, count)
         
-        next_day = next_day.replace(hour=0, minute=0, second=0, microsecond=0)
-        
         if today == next_day:
             execute_backup(vm)
             print("Executando backup para", vm, "hoje.")
@@ -53,6 +51,3 @@ def schedule_backups():
             print("Próximo backup para", vm, "em", days_until_backup, "dias.")
             
 schedule_backups()
-
-## CRONTAB
-# 0 3 * * 5-7 /usr/bin/python /caminho/para/o/script.py
