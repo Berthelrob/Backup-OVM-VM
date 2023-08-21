@@ -28,7 +28,7 @@ def next_weekday(d, weekday, count):
 
 # Função para executar o comando de backup
 def execute_backup(vm):
-    command = "/opt/ovm-bkp/bin/ovm-backup.sh " + vm
+    command = "/opt/ovm-bkp/bin/ovm-backup.sh " + vm " OVA N"
     subprocess.call(command, shell=True)
 
 # Função principal para agendar os backups
