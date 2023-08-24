@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Script: coleta_messages.sh
+# Script: coleta_erros_log_messages.sh
 # Desenvolvido por: Robson Berthelsen
 # Data: 24/08/2023
 # Versão: 1
