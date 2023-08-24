@@ -14,7 +14,7 @@
 log_file="/var/log/messages"
 zabbix_server="10.150.25.56"  # Endereço IP do servidor Zabbix
 hostname=$(hostname -s)        # Nome do host
-zabbix_key="/Linux\ by\ Zabbix\ agent/message_log_errors"  # Chave do item no Zabbix
+zabbix_key="message_log_errors"  # Chave do item no Zabbix
 
 # Padrões de erros a serem ignorados (separados por |)
 # Exemplo: ignored_errors="pattern1|pattern2|pattern3"
