@@ -26,10 +26,19 @@ def next_weekday(d, weekday, count):
     days_ahead += (count - 1) * 7
     return d + datetime.timedelta(days_ahead)
 
-# Função para executar o comando de backup
+# Função para executar o comando de backup e registrar no log
 def execute_backup(vm):
-    command = "/opt/ovm-bkp/bin/ovm-backup.sh " + vm " OVA N"
+    command = "/opt/ovm-bkp/bin/ovm-backup.sh " + vm + " OVA N"
     subprocess.call(command, shell=True)
+    log_message = f"{datetime.datetime.now()}: Executado backup para {vm}"
+    with open("backup_log.txt", "a") as log_file:
+        log_file.write(log_message + "\n")
+
+# Função para registrar a falta de backup no log
+def log_missed_backup(vm, days_until_backup):
+    log_message = f"{datetime.datetime.now()}: Nenhum backup agendado para {vm} em {days_until_backup} dias"
+    with open("backup_log.txt", "a") as log_file:
+        log_file.write(log_message + "\n")
 
 # Função principal para agendar os backups
 def schedule_backups():
@@ -48,6 +57,9 @@ def schedule_backups():
             print("Executando backup para", vm, "hoje.")
         else:
             days_until_backup = (next_day - today).days
-            print("Próximo backup para", vm, "em", days_until_backup, "dias.")
+            if days_until_backup == 0:
+                log_missed_backup(vm, days_until_backup)
+            else:
+                print("Próximo backup para", vm, "em", days_until_backup, "dias.")
             
 schedule_backups()
