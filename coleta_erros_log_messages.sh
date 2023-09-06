@@ -9,8 +9,8 @@
 # e envia as mensagens para o Zabbix usando o utilitário zabbix_sender.
 
 # Dependências: Necessário ter o pacote zabbix_sender instalado
-# Trigger no zabbix - Expressão do incidente: length(last(/ESRVAIRFLOW01/message_log_errors,#1))>0
-#                   - Expressão de recuperação: length(last(/ESRVAIRFLOW01/message_log_errors,#10))=0
+# Trigger no zabbix - Expressão do incidente: length(last(/Linux by Zabbix agent/message_log_errors,#1))>0
+#                   - Expressão de recuperação: length(last(/Linux by Zabbix agent/message_log_errors,#10))=0
 
 # Configurações
 log_file="/var/log/messages"
